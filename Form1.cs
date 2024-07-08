@@ -3,13 +3,18 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using AutoCADWrapper;
 
 namespace AutocadInitialization
 {
     public partial class Form1 : Form
     {
         private int currentAcadProcessId;
-        private AcadApplication AcadApp;
+        //private AcadApplication AcadApp;
+        //private AcadDocument AcadDoc;
+        private AutoCADWrapper.Document AcadDoc;
+        private AutoCADWrapper.Application AcadApp;
+
         private const string progId = "AutoCAD.Application.24.1";
         public Form1()
         {
@@ -27,54 +32,34 @@ namespace AutocadInitialization
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int oPid = getProcessId();
-            int nPid = 0;
-            try
-            {
-                AcadApp = (AcadApplication)Marshal.GetActiveObject(progId);
-                nPid = getProcessId();
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    AcadApp = (AcadApplication)Activator.CreateInstance(Type.GetTypeFromProgID(progId), true);
-                    nPid = getProcessId();
-                    AcadApp.Visible = true;
-                }
-                catch
-                {
-                    MessageBox.Show("Instance of 'Autocad.Application' could not be created.");
-                }
-            }
-            currentAcadProcessId = nPid - oPid;
+
+            AcadApp = new AutoCADWrapper.Application();
+            AcadApp.Initialize("24.1", true);
 
 
         }
 
-        private void Finalized()
-        {
-            try
-            {
-                AcadApp.Quit();
-                //if the normal process doesnot kill the process then second time process killing
-                if (currentAcadProcessId > 0)
-                {
-                    Process proc = Process.GetProcessById(currentAcadProcessId);
-                    proc.Kill();
-                }
-                AcadApp = null;
-            }
-            catch
-            {
-
-            }
-
-        }
+       
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Finalized();
+            //Finalized();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            AcadDoc = new Document();   
+            AcadDoc =(Document) AcadApp.getActiveDocument();
+            double[] center = { 0, 0, 0 };
+            ModelSpace mod =  AcadDoc.ModelSpace();
+            mod.AddCircle(center, 10);
+
+            double[] startpt = { 0, 0, 0 };
+            double[] endpt = { 100, 100, 0 };
+            mod.AddLine(startpt, endpt);    
+
+            AcadApp.ZoomExtents();
+
         }
     }
 }
