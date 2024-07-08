@@ -1,13 +1,13 @@
-﻿using Autodesk.AutoCAD.Interop;
+﻿using AutoCADWrapper;
+using Autodesk.AutoCAD.Interop;
+using Autodesk.AutoCAD.Interop.Common;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using AutoCADWrapper;
-using Excel = Microsoft.Office.Interop.Excel;
-using Autodesk.AutoCAD.Interop.Common;
-using Microsoft.Office.Interop.Excel;
 using System.Threading;
+using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace AutocadInitialization
 {
@@ -100,7 +100,7 @@ namespace AutocadInitialization
 
             int retryCount = 5;
             int delay = 2000;
-            while(retryCount > 0)
+            while (retryCount > 0)
             {
                 try
                 {
@@ -114,7 +114,7 @@ namespace AutocadInitialization
                         {
                             Console.WriteLine($"Processing Layout : {layout.Name}");
 
-               
+
                             AcadBlock block = (AcadBlock)layout.Block;
                             foreach (AcadEntity entity in block)
                             {
@@ -227,7 +227,7 @@ namespace AutocadInitialization
                     }
                 }
 
-               
+
                 excelWorkbook.Close(false);
                 excelApp.Quit();
                 //Release com objects
@@ -235,7 +235,7 @@ namespace AutocadInitialization
                 Marshal.ReleaseComObject(excelApp);
                 break;
             }
-            if(retryCount == 0)
+            if (retryCount == 0)
             {
                 Console.WriteLine("Failed to process");
             }
@@ -250,7 +250,7 @@ namespace AutocadInitialization
 
         private void button6_Click(object sender, EventArgs e)
         {
-            string dwgPath = @"C:\Users\Sanjog Shakya\Downloads\AutocadTest\08 VALVE CHAMBER.dwg"; 
+            string dwgPath = @"C:\Users\Sanjog Shakya\Downloads\AutocadTest\08 VALVE CHAMBER.dwg";
             AutoCADWrapper.Application app = new AutoCADWrapper.Application();
             app.Initialize("24.1", true);
 
@@ -261,6 +261,53 @@ namespace AutocadInitialization
             AutoCADWrapper.Document doc = app.getActiveDocument();
 
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+            string folderpath = dialog.SelectedPath;
+            lvDrawings.Items.Clear();
+            foreach (string file in Directory.GetFiles(folderpath))
+            {
+                string extension = Path.GetExtension(file);
+                if (extension == ".dwg")
+                {
+                    ListViewItem item = new ListViewItem();
+                    item.Text = Path.GetFileNameWithoutExtension(file);
+                    lvDrawings.Items.Add(item);
+                }
+            }
+            chkSelect.Enabled = lvDrawings.Items.Count != 0;
+
+        }
+
+        private void chkSelect_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in lvDrawings.Items)
+            {
+                item.Checked = chkSelect.Checked;
+            }
+            if (chkSelect.CheckState == CheckState.Checked)
+            {
+                chkSelect.Text = "Unselect All";
+            }
+            else
+            {
+                chkSelect.Text = "Select All";
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            //read excel first
+            ReadExcelData();
         }
     }
 }

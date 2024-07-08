@@ -34,6 +34,11 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.lvDrawings = new System.Windows.Forms.ListView();
+            this.colDwgName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnLoad = new System.Windows.Forms.Button();
+            this.chkSelect = new System.Windows.Forms.CheckBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -96,11 +101,72 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // lvDrawings
+            // 
+            this.lvDrawings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvDrawings.CheckBoxes = true;
+            this.lvDrawings.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colDwgName});
+            this.lvDrawings.FullRowSelect = true;
+            this.lvDrawings.GridLines = true;
+            this.lvDrawings.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvDrawings.HideSelection = false;
+            this.lvDrawings.Location = new System.Drawing.Point(12, 139);
+            this.lvDrawings.MultiSelect = false;
+            this.lvDrawings.Name = "lvDrawings";
+            this.lvDrawings.Size = new System.Drawing.Size(334, 242);
+            this.lvDrawings.TabIndex = 6;
+            this.lvDrawings.UseCompatibleStateImageBehavior = false;
+            this.lvDrawings.View = System.Windows.Forms.View.Details;
+            // 
+            // colDwgName
+            // 
+            this.colDwgName.Text = "Drawing Name";
+            this.colDwgName.Width = 300;
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point(12, 110);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnLoad.TabIndex = 7;
+            this.btnLoad.Text = "Load Dwg";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
+            // chkSelect
+            // 
+            this.chkSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkSelect.AutoSize = true;
+            this.chkSelect.Location = new System.Drawing.Point(12, 392);
+            this.chkSelect.Name = "chkSelect";
+            this.chkSelect.Size = new System.Drawing.Size(70, 17);
+            this.chkSelect.TabIndex = 8;
+            this.chkSelect.Text = "Select All";
+            this.chkSelect.UseVisualStyleBackColor = true;
+            this.chkSelect.CheckedChanged += new System.EventHandler(this.chkSelect_CheckedChanged);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(240, 388);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(106, 23);
+            this.button7.TabIndex = 9;
+            this.button7.Text = "Execute";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(365, 130);
+            this.ClientSize = new System.Drawing.Size(358, 421);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.chkSelect);
+            this.Controls.Add(this.btnLoad);
+            this.Controls.Add(this.lvDrawings);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -109,7 +175,9 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Autocad";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -121,6 +189,11 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ListView lvDrawings;
+        private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.ColumnHeader colDwgName;
+        internal System.Windows.Forms.CheckBox chkSelect;
+        private System.Windows.Forms.Button button7;
     }
 }
 

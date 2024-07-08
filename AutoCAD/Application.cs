@@ -1,13 +1,8 @@
 ﻿using Autodesk.AutoCAD.Interop;
-using Autodesk.AutoCAD.Interop.Common;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutoCADWrapper
@@ -93,13 +88,13 @@ namespace AutoCADWrapper
         {
             get
             {
-                return InvokeAcadApplicationMethod("Documents",BindingFlags.GetProperty,null);
+                return InvokeAcadApplicationMethod("Documents", BindingFlags.GetProperty, null);
             }
         }
         public void openDwgFile(string filename)
         {
             object documents = Documents;
-            InvokeAcadApplicationMethod("Open", BindingFlags.InvokeMethod,new object[] { filename });
+            InvokeAcadApplicationMethod("Open", BindingFlags.InvokeMethod, new object[] { filename });
         }
         private object InvokeAcadApplicationMethod(string methodName, BindingFlags bindingFlags, object[] args)
         {
