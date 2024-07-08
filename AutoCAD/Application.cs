@@ -1,8 +1,10 @@
 ﻿using Autodesk.AutoCAD.Interop;
+using Autodesk.AutoCAD.Interop.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +15,8 @@ namespace AutoCADWrapper
     public class Application
     {
         private int currentAcadProcessId;
-        private AcadApplication AcadApp;
-        private AcadDocument AcadDoc;
+        private AcadApplication acadApplication;
+        //private AcadDocument acadDocument;
         private const string progId = "AutoCAD.Application.24.1";
 
         public Application()
@@ -43,16 +45,17 @@ namespace AutoCADWrapper
             }
             try
             {
-                AcadApp = (AcadApplication)Marshal.GetActiveObject(acadversion);
+                acadApplication = (AcadApplication)Marshal.GetActiveObject(acadversion);
                 nPid = GetProcessId();
             }
             catch (Exception ex)
             {
                 try
                 {
-                    AcadApp = (AcadApplication)Activator.CreateInstance(Type.GetTypeFromProgID(acadversion), true);
+                    acadApplication = (AcadApplication)Activator.CreateInstance(Type.GetTypeFromProgID(acadversion), true);
+                    System.Threading.Thread.Sleep(1000);
                     nPid = GetProcessId();
-                    AcadApp.Visible = visibility;
+                    acadApplication.Visible = visibility;
                 }
                 catch
                 {
@@ -66,14 +69,14 @@ namespace AutoCADWrapper
         {
             try
             {
-                AcadApp.Quit();
+                acadApplication.Quit();
                 //if the normal process doesnot kill the process then second time process killing
                 if (currentAcadProcessId > 0)
                 {
                     Process proc = Process.GetProcessById(currentAcadProcessId);
                     proc.Kill();
                 }
-                AcadApp = null;
+                acadApplication = null;
             }
             catch
             {
@@ -83,16 +86,35 @@ namespace AutoCADWrapper
         public Document getActiveDocument()
         {
             Document doc = new Document();
-            doc.SetDocumentObject(AcadApp.GetType().InvokeMember("ActiveDocument", System.Reflection.BindingFlags.GetProperty, null, AcadApp, null));
+            doc.SetDocumentObject(InvokeAcadApplicationMethod("ActiveDocument", BindingFlags.GetProperty, null));
             return doc;
+        }
+        public object Documents
+        {
+            get
+            {
+                return InvokeAcadApplicationMethod("Documents",BindingFlags.GetProperty,null);
+            }
+        }
+        public void openDwgFile(string filename)
+        {
+            object documents = Documents;
+            InvokeAcadApplicationMethod("Open", BindingFlags.InvokeMethod,new object[] { filename });
+        }
+        private object InvokeAcadApplicationMethod(string methodName, BindingFlags bindingFlags, object[] args)
+        {
+            return acadApplication.GetType().InvokeMember(methodName, bindingFlags, null, acadApplication, args);
         }
         public void Update()
         {
-            AcadApp.Update();
+            acadApplication.Update();
         }
         public void ZoomExtents()
         {
-            AcadApp.ZoomExtents();
+            acadApplication.ZoomExtents();
         }
+
+
     }
 }
+

@@ -16,7 +16,7 @@ namespace AutoCADWrapper
         {
             get
             {
-                return acadDocument.GetType().InvokeMember("Name", BindingFlags.GetProperty, null, acadDocument, null);
+                return InvokeAcadDocumentMethod("Name",BindingFlags.GetProperty,null);
             }
         }
         public AcadDocument GetDocumentObject()
@@ -33,38 +33,43 @@ namespace AutoCADWrapper
         }
         public object Layers()
         {
-            return acadDocument.GetType().InvokeMember("Layers",BindingFlags.GetProperty, null, acadDocument, null);
+            return InvokeAcadDocumentMethod("Layers",BindingFlags.GetProperty, null);
         }
         public object ActiveLayer
         {
             get
             {
-                return acadDocument.GetType().InvokeMember("ActiveLayer", BindingFlags.GetProperty, null, acadDocument, null);
+                return InvokeAcadDocumentMethod("ActiveLayer", BindingFlags.GetProperty, null);
             }
             set
             {
-                acadDocument.GetType().InvokeMember("ActiveLayer",BindingFlags.SetProperty,null, acadDocument, new object[] { value });
+               InvokeAcadDocumentMethod("ActiveLayer",BindingFlags.SetProperty, new object[] { value });
             }
         }
         public object Blocks
         {
             get
             {
-                return acadDocument.GetType().InvokeMember("Blocks",BindingFlags.GetProperty,null, acadDocument, null); 
+                return InvokeAcadDocumentMethod("Blocks", BindingFlags.GetProperty, null); 
             }
         }
         public ModelSpace ModelSpace()
         {
             ModelSpace mSpace = new ModelSpace();
-            mSpace.setModelSpaceObject(acadDocument.GetType().InvokeMember("ModelSpace", BindingFlags.GetProperty, null, acadDocument, null));
+            mSpace.setModelSpaceObject(InvokeAcadDocumentMethod("ModelSpace", BindingFlags.GetProperty, null));
             return mSpace;
         }
 
         public Utility Utility()
         {
             Utility mUtility = new Utility();
-            mUtility.setUtilityObject(acadDocument.GetType().InvokeMember("Utility", BindingFlags.GetProperty, null, acadDocument, null));
+            mUtility.setUtilityObject(InvokeAcadDocumentMethod("Utility", BindingFlags.GetProperty, null));
             return mUtility;
+        }
+
+        private object InvokeAcadDocumentMethod(string methodName, BindingFlags bindingFlags, object[] args)
+        {
+            return acadDocument.GetType().InvokeMember(methodName, bindingFlags,null,acadDocument, args);
         }
 
     }
