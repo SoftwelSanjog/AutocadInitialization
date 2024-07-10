@@ -18,6 +18,8 @@ namespace AutocadInitialization
         //private AcadDocument AcadDoc;
         private AutoCADWrapper.Document AcadDoc;
         private AutoCADWrapper.Application AcadApp;
+        string folderpath = string.Empty;
+        private AttributeData attributeData;
 
         private const string progId = "AutoCAD.Application.24.1";
         public Form1()
@@ -272,7 +274,12 @@ namespace AutocadInitialization
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() != DialogResult.OK) return;
-            string folderpath = dialog.SelectedPath;
+            folderpath = dialog.SelectedPath;
+            LoadDwgFiles(folderpath);
+
+        }
+        private void LoadDwgFiles(string fpath)
+        {
             lvDrawings.Items.Clear();
             foreach (string file in Directory.GetFiles(folderpath))
             {
@@ -285,7 +292,6 @@ namespace AutocadInitialization
                 }
             }
             chkSelect.Enabled = lvDrawings.Items.Count != 0;
-
         }
 
         private void chkSelect_CheckedChanged(object sender, EventArgs e)
@@ -307,7 +313,30 @@ namespace AutocadInitialization
         private void button7_Click(object sender, EventArgs e)
         {
             //read excel first
-            ReadExcelData();
+            //ReadExcelData();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            LoadDwgFiles(folderpath);
+        }
+
+        private void btnReadExcel_Click(object sender, EventArgs e)
+        {
+            ExcelWrapper excelWrapper = new ExcelWrapper();
+            excelWrapper.Initialize();
+            attributeData = excelWrapper.GetAttributeData();
+           txtHead.Text = attributeData.ClientHead;
+            txtDepartment.Text = attributeData.Department;
+            txtDivision.Text = attributeData.Division;
+            txtLocation.Text = attributeData.ClientLocation;
+            txtFirmName.Text = attributeData.FirmName;
+            txtFirmLocation.Text = attributeData.FirmLocation;
+            txtProjectName.Text = attributeData.ProjectName;
+            txtProjectLocation.Text = attributeData.ProjectLocation;
+            txtDesignerName.Text = attributeData.Designer;
+            txtDesignedDate.Text = attributeData.Date;
+            txtDrawingName.Text = attributeData.DrawingNo;
         }
     }
 }

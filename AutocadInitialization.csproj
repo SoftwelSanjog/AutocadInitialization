@@ -66,6 +66,7 @@
     <Compile Include="AutoCAD\Document.cs" />
     <Compile Include="AutoCAD\ModelSpace.cs" />
     <Compile Include="AutoCAD\Utility.cs" />
+    <Compile Include="ExcelWrapper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
