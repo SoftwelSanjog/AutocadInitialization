@@ -11,7 +11,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace AutocadInitialization
 {
-    public partial class Form1 : Form
+    public partial class Main : Form
     {
         private int currentAcadProcessId;
         //private AcadApplication AcadApp;
@@ -19,12 +19,41 @@ namespace AutocadInitialization
         private AutoCADWrapper.Document AcadDoc;
         private AutoCADWrapper.Application AcadApp;
         string folderpath = string.Empty;
-        private AttributeData attributeData;
+        private AttributeData attributeData = new AttributeData();
 
         private const string progId = "AutoCAD.Application.24.1";
-        public Form1()
+        public Main()
         {
             InitializeComponent();
+            InitializeCheckboxTag();
+        }
+        private void InitializeCheckboxTag()
+        {
+
+            //lets assign the checkbox tags as property name for easy identificatin
+            //store related textboxes in checkbox tag
+            //chkHead.Tag = nameof(attributeData.isClientHead);
+            //chkDepartment.Tag = nameof(attributeData.isDepartment);
+            //chkLocation.Tag = nameof(attributeData.isClientLocation);
+            //chkFirmName.Tag = nameof(attributeData.isFirmName);
+            //chkFirmLocation.Tag = nameof(attributeData.isFirmLocation);
+            //chkProjectName.Tag = nameof(attributeData.isProjectName);
+            //chkProjectLocation.Tag = nameof(attributeData.isProjectLocation);
+            //chkDesignerName.Tag = nameof(attributeData.isDesigner);
+            //chkDesignedDate.Tag = nameof(attributeData.isDate);
+            //chkDrawingName.Tag = nameof(attributeData.isDrawingName);
+
+            chkHead.Tag = new Tuple<TextBox, string>(txtHead, nameof(attributeData.isClientHead));
+            chkDepartment.Tag = new Tuple<TextBox, string>(txtDepartment, nameof(attributeData.isDepartment));
+            chkDivision.Tag = new Tuple<TextBox, string>(txtDivision, nameof(attributeData.isDivision));
+            chkLocation.Tag = new Tuple<TextBox, string>(txtLocation, nameof(attributeData.isClientLocation));
+            chkFirmName.Tag = new Tuple<TextBox, string>(txtFirmName, nameof(attributeData.isFirmName));
+            chkFirmLocation.Tag = new Tuple<TextBox, string>(txtFirmLocation, nameof(attributeData.isFirmLocation));
+            chkProjectName.Tag = new Tuple<TextBox, string>(txtProjectName, nameof(attributeData.isProjectName));
+            chkProjectLocation.Tag = new Tuple<TextBox, string>(txtProjectLocation, nameof(attributeData.isProjectLocation));
+            chkDesignerName.Tag = new Tuple<TextBox, string>(txtDesignerName, nameof(attributeData.isDesigner));
+            chkDesignedDate.Tag = new Tuple<TextBox, string>(txtDesignedDate, nameof(attributeData.isDate));
+            chkDrawingName.Tag = new Tuple<TextBox, string>(txtDrawingName, nameof(attributeData.isDrawingName));
         }
         private int getProcessId()
         {
@@ -45,12 +74,6 @@ namespace AutocadInitialization
 
         }
 
-
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //Finalized();
-        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -280,7 +303,7 @@ namespace AutocadInitialization
         }
         private void LoadDwgFiles(string fpath)
         {
-            lvDrawings.Items.Clear();
+            lvDrawingsFrom.Items.Clear();
             foreach (string file in Directory.GetFiles(folderpath))
             {
                 string extension = Path.GetExtension(file);
@@ -288,15 +311,15 @@ namespace AutocadInitialization
                 {
                     ListViewItem item = new ListViewItem();
                     item.Text = Path.GetFileNameWithoutExtension(file);
-                    lvDrawings.Items.Add(item);
+                    lvDrawingsFrom.Items.Add(item);
                 }
             }
-            chkSelect.Enabled = lvDrawings.Items.Count != 0;
+            chkSelect.Enabled = lvDrawingsFrom.Items.Count != 0;
         }
 
         private void chkSelect_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in lvDrawings.Items)
+            foreach (ListViewItem item in lvDrawingsFrom.Items)
             {
                 item.Checked = chkSelect.Checked;
             }
@@ -324,19 +347,70 @@ namespace AutocadInitialization
         private void btnReadExcel_Click(object sender, EventArgs e)
         {
             ExcelWrapper excelWrapper = new ExcelWrapper();
-            excelWrapper.Initialize();
-            attributeData = excelWrapper.GetAttributeData();
-           txtHead.Text = attributeData.ClientHead;
-            txtDepartment.Text = attributeData.Department;
-            txtDivision.Text = attributeData.Division;
-            txtLocation.Text = attributeData.ClientLocation;
-            txtFirmName.Text = attributeData.FirmName;
-            txtFirmLocation.Text = attributeData.FirmLocation;
-            txtProjectName.Text = attributeData.ProjectName;
-            txtProjectLocation.Text = attributeData.ProjectLocation;
-            txtDesignerName.Text = attributeData.Designer;
-            txtDesignedDate.Text = attributeData.Date;
-            txtDrawingName.Text = attributeData.DrawingNo;
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                excelWrapper.Initialize();
+                tsStatus.Text = "Reading Excel.....";
+                attributeData = excelWrapper.GetAttributeData();
+                txtHead.Text = attributeData.ClientHead;
+                txtDepartment.Text = attributeData.Department;
+                txtDivision.Text = attributeData.Division;
+                txtLocation.Text = attributeData.ClientLocation;
+                txtFirmName.Text = attributeData.FirmName;
+                txtFirmLocation.Text = attributeData.FirmLocation;
+                txtProjectName.Text = attributeData.ProjectName;
+                txtProjectLocation.Text = attributeData.ProjectLocation;
+                txtDesignerName.Text = attributeData.Designer;
+                txtDesignedDate.Text = attributeData.Date;
+                txtDrawingName.Text = attributeData.DrawingNo;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                //excelWrapper.Finalized();
+                tsStatus.Text = "Ready";
+                Cursor.Current = Cursors.Default;
+            }
+
+        }
+
+        private void chk_CheckedChanged(object sender, EventArgs e)
+        {
+            System.Windows.Forms.CheckBox checkbox = sender as System.Windows.Forms.CheckBox;
+            if (checkbox != null && checkbox.Tag is Tuple<TextBox, string> tag)
+            {
+                //string propName = checkbox.Tag as string;
+                //if (propName != null)
+                //{
+                //    // use reflection to set the property value dynamically
+                //    typeof(AttributeData).GetProperty(propName).SetValue(attributeData, checkbox.Checked);
+                //}
+
+                TextBox textBox = tag.Item1 as TextBox;
+                string propName = tag.Item2 as string;
+                typeof(AttributeData).GetProperty(propName)?.SetValue(attributeData, checkbox.Checked);
+                textBox.Enabled = checkbox.Checked;
+            }
+        }
+
+        private void button8_Click_1(object sender, EventArgs e)
+        {
+            //MessageBox.Show($"chkClientHead: {attributeData.isClientHead}\n" +
+            //                $"chkDepartment: {attributeData.isDepartment}\n" +
+            //                $"chkLocation: {attributeData.isClientLocation}\n" +
+            //                $"chkFirmName: {attributeData.isFirmName}\n" +
+            //                $"chkFirmLocation: {attributeData.isFirmLocation}\n" +
+            //                $"chkProjectName: {attributeData.isProjectName}\n" +
+            //                $"chkProjectLocation: {attributeData.isProjectLocation}\n" +
+            //                $"chkDate: {attributeData.isDate}\n" +
+            //                $"chkDesigner: {attributeData.isDesigner}\n");
+            Settings objSettings = new Settings();
+            objSettings.ShowDialog();
         }
     }
 }
