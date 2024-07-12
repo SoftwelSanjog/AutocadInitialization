@@ -100,6 +100,8 @@ namespace AutoCADWrapper
         {
             return acadApplication.GetType().InvokeMember(methodName, bindingFlags, null, acadApplication, args);
         }
+
+
         public void Update()
         {
             acadApplication.Update();
@@ -108,7 +110,20 @@ namespace AutoCADWrapper
         {
             acadApplication.ZoomExtents();
         }
-
+        /*acadApp = obj as AcadApplication;
+        double[] cen = new double[] { 0, 0, 0 };
+        circle = acadApp.ActiveDocument.Database.ModelSpace.AddCircle(cen, 10);
+                    color = acadApp.GetInterfaceObject("Autocad.AcCmColor.18") as AcadAcCmColor;
+                    color.SetRGB(50, 150, 250);
+                    circle.TrueColor = color;
+        You can try this too
+            finally
+            {
+                if (color != null) Marshal.FinalReleaseComObject(color);
+                if (circle != null) Marshal.FinalReleaseComObject(circle);
+                if (acadApp != null) Marshal.FinalReleaseComObject(acadApp);
+            }
+        */
 
     }
 }
