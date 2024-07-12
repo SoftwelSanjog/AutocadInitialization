@@ -29,14 +29,20 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cboCadVersion = new System.Windows.Forms.ComboBox();
             this.btnSave = new System.Windows.Forms.Button();
+            this.cboCadVersion = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtCollectionFolder = new System.Windows.Forms.TextBox();
+            this.btnBrowseFile = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnBrowseFile);
+            this.groupBox1.Controls.Add(this.txtCollectionFolder);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.btnSave);
             this.groupBox1.Controls.Add(this.cboCadVersion);
             this.groupBox1.Controls.Add(this.label1);
@@ -47,14 +53,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "CAD Version";
             // 
-            // label1
+            // btnSave
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Select Autocad Version";
+            this.btnSave.Location = new System.Drawing.Point(269, 409);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 1;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // cboCadVersion
             // 
@@ -66,15 +73,40 @@
             this.cboCadVersion.TabIndex = 2;
             this.cboCadVersion.SelectedIndexChanged += new System.EventHandler(this.cboCadVersion_SelectedIndexChanged);
             // 
-            // btnSave
+            // label1
             // 
-            this.btnSave.Location = new System.Drawing.Point(269, 409);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(118, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Select Autocad Version";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 56);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(120, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Drawing Collection Path";
+            // 
+            // txtCollectionFolder
+            // 
+            this.txtCollectionFolder.Location = new System.Drawing.Point(136, 51);
+            this.txtCollectionFolder.Name = "txtCollectionFolder";
+            this.txtCollectionFolder.Size = new System.Drawing.Size(166, 20);
+            this.txtCollectionFolder.TabIndex = 4;
+            // 
+            // btnBrowseFile
+            // 
+            this.btnBrowseFile.Location = new System.Drawing.Point(308, 51);
+            this.btnBrowseFile.Name = "btnBrowseFile";
+            this.btnBrowseFile.Size = new System.Drawing.Size(36, 23);
+            this.btnBrowseFile.TabIndex = 5;
+            this.btnBrowseFile.Text = "...";
+            this.btnBrowseFile.UseVisualStyleBackColor = true;
+            this.btnBrowseFile.Click += new System.EventHandler(this.btnBrowseFile_Click);
             // 
             // Settings
             // 
@@ -98,5 +130,8 @@
         private System.Windows.Forms.ComboBox cboCadVersion;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnBrowseFile;
+        private System.Windows.Forms.TextBox txtCollectionFolder;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.Interop;
+﻿using AutocadInitialization;
+using Autodesk.AutoCAD.Interop;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -124,6 +125,12 @@ namespace AutoCADWrapper
                 if (acadApp != null) Marshal.FinalReleaseComObject(acadApp);
             }
         */
+        public object getColor()
+        {
+            Object color;
+            color = acadApplication.GetInterfaceObject("AutoCAD.AcCmColor." + Global.selectedCadVersion);
+            return color;
+        }
 
     }
 }

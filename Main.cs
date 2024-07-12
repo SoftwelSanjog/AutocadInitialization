@@ -1,12 +1,16 @@
-﻿using AutoCADWrapper;
+﻿using AutocadInitialization.Class;
+using AutoCADWrapper;
 using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.Interop.Common;
 using System;
+using System.Data;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace AutocadInitialization
@@ -20,12 +24,19 @@ namespace AutocadInitialization
         private AutoCADWrapper.Application AcadApp;
         string folderpath = string.Empty;
         private AttributeData attributeData = new AttributeData();
+        private ListViewItemArranger listItemArranger ;
+        private SqliteClass objSqlite;
+        public static string dbPath = System.Windows.Forms.Application.StartupPath + "\\support\\settings.dat";
 
         private const string progId = "AutoCAD.Application.24.1";
+        private Settings settings;
         public Main()
         {
             InitializeComponent();
             InitializeCheckboxTag();
+            settings = new Settings();
+            settings.SettingsChanged += Settings_SettingChanged;
+
         }
         private void InitializeCheckboxTag()
         {
@@ -290,16 +301,44 @@ namespace AutocadInitialization
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Text += " Current Version " + Global.CurrentVersion.ToString();
+            copyDbFile();
+            readSettings();
+        }
+        private void copyDbFile()
+        {
+            string localFilePath = IO.UserDataFolder();
+            Global.localDbPath = localFilePath +"\\settings.dat";
+            if (!File.Exists(Global.localDbPath)) {
+                File.Copy(dbPath, Global.localDbPath);
+            }
+            else
+            {
 
+            }
+        }
+        private void readSettings()
+        {
+            objSqlite = new SqliteClass(Global.localDbPath);
+            DataTable dt = objSqlite.ReadDataFromTable("*", "tblsettings", "id=1");
+            if (dt.Rows.Count > 0) {
+                foreach (DataRow dr in dt.Rows) {
+                    Global.selectedCadVersion = (double) dr["cadVersion"];
+                    folderpath = (string)dr["dwgfolderpath"].ToString();
+                }
+            }
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() != DialogResult.OK) return;
-            folderpath = dialog.SelectedPath;
+            if(folderpath == string.Empty) {
+                MessageBox.Show("You can set the drawing file directory in setting page.", "Setting", MessageBoxButtons.OK);
+                return;
+            }
+            //FolderBrowserDialog dialog = new FolderBrowserDialog();
+            //if (dialog.ShowDialog() != DialogResult.OK) return;
+            //folderpath = dialog.SelectedPath;
             LoadDwgFiles(folderpath);
-
         }
         private void LoadDwgFiles(string fpath)
         {
@@ -411,6 +450,85 @@ namespace AutocadInitialization
             //                $"chkDesigner: {attributeData.isDesigner}\n");
             Settings objSettings = new Settings();
             objSettings.ShowDialog();
+        }
+
+        private void btnToRight_Click(object sender, EventArgs e)
+        {
+            //object selectedItem;
+            
+            foreach (ListViewItem selectedItem in lvDrawingsFrom.CheckedItems)
+            {
+                lvDrawingsTo.Items.Add(selectedItem.Text.ToString());
+            }
+            //remove the selected item
+            int selectedCount = lvDrawingsFrom.CheckedItems.Count;
+            ListViewItem selectedItm;
+            while (selectedCount > 0)
+            {
+                    selectedItm = lvDrawingsFrom.CheckedItems[0];
+                    lvDrawingsFrom.Items.Remove(selectedItm);
+                    selectedCount = lvDrawingsFrom.CheckedItems.Count;
+            }
+            chkSelect.Checked = false;
+            chkSelect.Text = "Select All";
+        }
+
+        private void btnToLeft_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem selectedItem in lvDrawingsTo.CheckedItems)
+            {
+                lvDrawingsFrom.Items.Add(selectedItem.Text.ToString());
+            }
+            //remove the selected item
+            int selectedCount = lvDrawingsTo.CheckedItems.Count;
+            ListViewItem selectedItm;
+            while (selectedCount > 0)
+            {
+                selectedItm = lvDrawingsTo.CheckedItems[0];
+                lvDrawingsTo.Items.Remove(selectedItm);
+                selectedCount = lvDrawingsTo.CheckedItems.Count;
+            }
+            chkSelectTo.Checked = false;
+            chkSelectTo.Text = "Select All";
+        }
+
+        private void chkSelectTo_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in lvDrawingsTo.Items)
+            {
+                item.Checked = chkSelectTo.Checked;
+            }
+            if (chkSelectTo.CheckState == CheckState.Checked)
+            {
+                chkSelectTo.Text = "Unselect All";
+            }
+            else
+            {
+                chkSelectTo.Text = "Select All";
+            }
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            listItemArranger = new ListViewItemArranger(lvDrawingsTo);
+            listItemArranger.MoveUp();
+        }
+
+        private void lvDrawingsTo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listItemArranger = new ListViewItemArranger(lvDrawingsTo);
+            listItemArranger.MoveDown();
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            listItemArranger = new ListViewItemArranger(lvDrawingsTo);
+            listItemArranger.MoveDown();
+        }
+
+        private void Settings_SettingChanged(object sender, EventArgs e)
+        {
+            readSettings();
         }
     }
 }

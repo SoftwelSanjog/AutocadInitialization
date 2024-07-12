@@ -7,6 +7,8 @@ namespace AutocadInitialization
 {
     public partial class Settings : Form
     {
+        //Define an event to notify subscribers (e.g Mainform) that changes have been saved
+        public event EventHandler SettingsChanged;
         Dictionary<string, double> cadVersion = new Dictionary<string, double>();
         public Settings()
         {
@@ -14,6 +16,7 @@ namespace AutocadInitialization
             LoadCadVersion();
         }
 
+        
         private void Settings_Load(object sender, EventArgs e)
         {
             LoadCadVersion();
@@ -63,21 +66,36 @@ namespace AutocadInitialization
         private void btnSave_Click(object sender, EventArgs e)
         {
             SqliteClass objsqlite = new SqliteClass(Global.localDbPath);
-            string qry = "UPDATE tblsettings SET cadVersion=" + Global.selectedCadVersion;
+            string qry = $"UPDATE tblsettings SET cadVersion={Global.selectedCadVersion},dwgfolderpath='{txtCollectionFolder.Text}'";
             List<string> qrylst = new List<string> { qry };
 
             if (objsqlite.Transaction(qrylst.ToArray()))
             {
                 Global.selectedCadVersion = double.Parse(cboCadVersion.Text.Split('(')[1].Replace(")", ""));
+                OnSettingChanged();
                 MessageBox.Show("Setting Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
             }
         }
 
+        //method to raise the event
+        protected virtual void OnSettingChanged()
+        {
+            SettingsChanged?.Invoke(this, EventArgs.Empty);
+        }
         private void cboCadVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cboCadVersion.SelectedIndex < 0) return;
             Global.selectedCadVersion = double.Parse(cboCadVersion.Text.Split('(')[1].Replace(")", ""));
+        }
+
+        private void btnBrowseFile_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK) 
+            { 
+            txtCollectionFolder.Text = fbd.SelectedPath;
+            }
         }
     }
 }

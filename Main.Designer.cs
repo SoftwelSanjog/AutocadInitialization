@@ -33,10 +33,8 @@
             this.button4 = new System.Windows.Forms.Button();
             this.lvDrawingsFrom = new System.Windows.Forms.ListView();
             this.colDwgName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnLoad = new System.Windows.Forms.Button();
             this.chkSelect = new System.Windows.Forms.CheckBox();
             this.button7 = new System.Windows.Forms.Button();
-            this.btnReload = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.txtDrawingName = new System.Windows.Forms.TextBox();
@@ -82,13 +80,15 @@
             this.tsStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lvDrawingsTo = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnToRight = new System.Windows.Forms.Button();
-            this.btnToLeft = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.chkSelectTo = new System.Windows.Forms.CheckBox();
+            this.btnUp = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnReload = new System.Windows.Forms.Button();
+            this.btnToLeft = new System.Windows.Forms.Button();
+            this.btnToRight = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -122,8 +122,8 @@
             // 
             // lvDrawingsFrom
             // 
-            this.lvDrawingsFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lvDrawingsFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvDrawingsFrom.CheckBoxes = true;
             this.lvDrawingsFrom.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -144,16 +144,6 @@
             // 
             this.colDwgName.Text = "Drawing Name";
             this.colDwgName.Width = 300;
-            // 
-            // btnLoad
-            // 
-            this.btnLoad.Location = new System.Drawing.Point(12, 247);
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(75, 23);
-            this.btnLoad.TabIndex = 7;
-            this.btnLoad.Text = "Load Dwg";
-            this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // chkSelect
             // 
@@ -177,16 +167,6 @@
             this.button7.Text = "Execute";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // btnReload
-            // 
-            this.btnReload.Location = new System.Drawing.Point(93, 247);
-            this.btnReload.Name = "btnReload";
-            this.btnReload.Size = new System.Drawing.Size(75, 23);
-            this.btnReload.TabIndex = 10;
-            this.btnReload.Text = "Reload";
-            this.btnReload.UseVisualStyleBackColor = true;
-            this.btnReload.Click += new System.EventHandler(this.button8_Click);
             // 
             // groupBox1
             // 
@@ -604,9 +584,9 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(701, 171);
+            this.btnSettings.Location = new System.Drawing.Point(697, 171);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(67, 23);
+            this.btnSettings.Size = new System.Drawing.Size(71, 23);
             this.btnSettings.TabIndex = 12;
             this.btnSettings.Text = "Settings";
             this.btnSettings.UseVisualStyleBackColor = true;
@@ -630,8 +610,8 @@
             // 
             // lvDrawingsTo
             // 
-            this.lvDrawingsTo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lvDrawingsTo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvDrawingsTo.CheckBoxes = true;
             this.lvDrawingsTo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -647,58 +627,34 @@
             this.lvDrawingsTo.TabIndex = 14;
             this.lvDrawingsTo.UseCompatibleStateImageBehavior = false;
             this.lvDrawingsTo.View = System.Windows.Forms.View.Details;
+            this.lvDrawingsTo.SelectedIndexChanged += new System.EventHandler(this.lvDrawingsTo_SelectedIndexChanged);
             // 
             // columnHeader1
             // 
             this.columnHeader1.Text = "Drawing Name";
             this.columnHeader1.Width = 300;
             // 
-            // btnToRight
+            // chkSelectTo
             // 
-            this.btnToRight.Location = new System.Drawing.Point(371, 340);
-            this.btnToRight.Name = "btnToRight";
-            this.btnToRight.Size = new System.Drawing.Size(39, 23);
-            this.btnToRight.TabIndex = 15;
-            this.btnToRight.Text = ">";
-            this.btnToRight.UseVisualStyleBackColor = true;
+            this.chkSelectTo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkSelectTo.AutoSize = true;
+            this.chkSelectTo.Location = new System.Drawing.Point(6, 181);
+            this.chkSelectTo.Name = "chkSelectTo";
+            this.chkSelectTo.Size = new System.Drawing.Size(70, 17);
+            this.chkSelectTo.TabIndex = 17;
+            this.chkSelectTo.Text = "Select All";
+            this.chkSelectTo.UseVisualStyleBackColor = true;
+            this.chkSelectTo.CheckedChanged += new System.EventHandler(this.chkSelectTo_CheckedChanged);
             // 
-            // btnToLeft
+            // btnUp
             // 
-            this.btnToLeft.Location = new System.Drawing.Point(371, 369);
-            this.btnToLeft.Name = "btnToLeft";
-            this.btnToLeft.Size = new System.Drawing.Size(39, 23);
-            this.btnToLeft.TabIndex = 16;
-            this.btnToLeft.Text = "<";
-            this.btnToLeft.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(6, 181);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(70, 17);
-            this.checkBox1.TabIndex = 17;
-            this.checkBox1.Text = "Select All";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(300, 26);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(29, 36);
-            this.button1.TabIndex = 18;
-            this.button1.Text = "Dn";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(335, 26);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(29, 36);
-            this.button2.TabIndex = 19;
-            this.button2.Text = "Up";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnUp.Image = global::AutocadInitialization.Properties.Resources.sort_up_16px;
+            this.btnUp.Location = new System.Drawing.Point(335, 26);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(29, 36);
+            this.btnUp.TabIndex = 19;
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
             // groupBox7
             // 
@@ -713,16 +669,74 @@
             // 
             // groupBox8
             // 
-            this.groupBox8.Controls.Add(this.button1);
-            this.groupBox8.Controls.Add(this.button2);
+            this.groupBox8.Controls.Add(this.btnDown);
+            this.groupBox8.Controls.Add(this.btnUp);
             this.groupBox8.Controls.Add(this.lvDrawingsTo);
-            this.groupBox8.Controls.Add(this.checkBox1);
+            this.groupBox8.Controls.Add(this.chkSelectTo);
             this.groupBox8.Location = new System.Drawing.Point(416, 276);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(370, 204);
             this.groupBox8.TabIndex = 21;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "To Generate";
+            // 
+            // btnDown
+            // 
+            this.btnDown.Image = global::AutocadInitialization.Properties.Resources.sort_down_16px;
+            this.btnDown.Location = new System.Drawing.Point(300, 26);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(29, 36);
+            this.btnDown.TabIndex = 18;
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // btnReload
+            // 
+            this.btnReload.Image = global::AutocadInitialization.Properties.Resources.synchronize_16px;
+            this.btnReload.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReload.Location = new System.Drawing.Point(93, 247);
+            this.btnReload.Name = "btnReload";
+            this.btnReload.Size = new System.Drawing.Size(66, 23);
+            this.btnReload.TabIndex = 10;
+            this.btnReload.Text = "Reload";
+            this.btnReload.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnReload.UseVisualStyleBackColor = true;
+            this.btnReload.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // btnToLeft
+            // 
+            this.btnToLeft.Image = global::AutocadInitialization.Properties.Resources.double_left_16px;
+            this.btnToLeft.Location = new System.Drawing.Point(377, 369);
+            this.btnToLeft.Name = "btnToLeft";
+            this.btnToLeft.Size = new System.Drawing.Size(39, 23);
+            this.btnToLeft.TabIndex = 16;
+            this.btnToLeft.Text = "<";
+            this.btnToLeft.UseVisualStyleBackColor = true;
+            this.btnToLeft.Click += new System.EventHandler(this.btnToLeft_Click);
+            // 
+            // btnToRight
+            // 
+            this.btnToRight.Image = global::AutocadInitialization.Properties.Resources.double_right_16px;
+            this.btnToRight.Location = new System.Drawing.Point(377, 340);
+            this.btnToRight.Name = "btnToRight";
+            this.btnToRight.Size = new System.Drawing.Size(39, 23);
+            this.btnToRight.TabIndex = 15;
+            this.btnToRight.Text = ">";
+            this.btnToRight.UseVisualStyleBackColor = true;
+            this.btnToRight.Click += new System.EventHandler(this.btnToRight_Click);
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.Image = global::AutocadInitialization.Properties.Resources.browse_folder_16px;
+            this.btnLoad.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLoad.Location = new System.Drawing.Point(12, 247);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(81, 23);
+            this.btnLoad.TabIndex = 7;
+            this.btnLoad.Text = "Load Dwg";
+            this.btnLoad.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // Main
             // 
@@ -821,9 +835,9 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Button btnToRight;
         private System.Windows.Forms.Button btnToLeft;
-        internal System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        internal System.Windows.Forms.CheckBox chkSelectTo;
+        private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.GroupBox groupBox8;
     }
