@@ -13,15 +13,15 @@ namespace AutocadInitialization
         public Settings()
         {
             InitializeComponent();
-            LoadCadVersion();
         }
 
-        
+
         private void Settings_Load(object sender, EventArgs e)
         {
-            LoadCadVersion();
+            LoadData();
+
         }
-        private void LoadCadVersion()
+        private void LoadData()
         {
             cboCadVersion.Items.Add("AutoCAD 2000 (15)");
             cboCadVersion.Items.Add("AutoCAD 2002 (15.2)");
@@ -45,8 +45,8 @@ namespace AutocadInitialization
             cboCadVersion.Items.Add("AutoCAD 2021 (24)");
             cboCadVersion.Items.Add("AutoCAD 2022 (24.1)");
             cboCadVersion.Items.Add("AutoCAD 2023 (24.2)");
-
-            //SelectItem1(cboCadVersion, Global.selectedCadVersion.ToString());
+            SelectItem1(cboCadVersion, Global.selectedCadVersion.ToString());
+            txtCollectionFolder.Text = Global.dwgFolderpath.ToString();
         }
         private void SelectItem1(ComboBox box, string version)
         {
@@ -92,9 +92,9 @@ namespace AutocadInitialization
         private void btnBrowseFile_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() == DialogResult.OK) 
-            { 
-            txtCollectionFolder.Text = fbd.SelectedPath;
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                txtCollectionFolder.Text = fbd.SelectedPath;
             }
         }
     }

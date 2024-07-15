@@ -28,34 +28,66 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnBrowseFile = new System.Windows.Forms.Button();
+            this.txtCollectionFolder = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.cboCadVersion = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtCollectionFolder = new System.Windows.Forms.TextBox();
-            this.btnBrowseFile = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.btnBrowseFile);
             this.groupBox1.Controls.Add(this.txtCollectionFolder);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.btnSave);
             this.groupBox1.Controls.Add(this.cboCadVersion);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Location = new System.Drawing.Point(1, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(350, 438);
+            this.groupBox1.Size = new System.Drawing.Size(427, 131);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "CAD Version";
             // 
+            // btnBrowseFile
+            // 
+            this.btnBrowseFile.Location = new System.Drawing.Point(385, 49);
+            this.btnBrowseFile.Name = "btnBrowseFile";
+            this.btnBrowseFile.Size = new System.Drawing.Size(36, 23);
+            this.btnBrowseFile.TabIndex = 5;
+            this.btnBrowseFile.Text = "...";
+            this.btnBrowseFile.UseVisualStyleBackColor = true;
+            this.btnBrowseFile.Click += new System.EventHandler(this.btnBrowseFile_Click);
+            // 
+            // txtCollectionFolder
+            // 
+            this.txtCollectionFolder.Location = new System.Drawing.Point(136, 51);
+            this.txtCollectionFolder.Name = "txtCollectionFolder";
+            this.txtCollectionFolder.ReadOnly = true;
+            this.txtCollectionFolder.Size = new System.Drawing.Size(243, 20);
+            this.txtCollectionFolder.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 56);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(120, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Drawing Collection Path";
+            // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(269, 409);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(346, 102);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 1;
@@ -69,7 +101,7 @@
             this.cboCadVersion.FormattingEnabled = true;
             this.cboCadVersion.Location = new System.Drawing.Point(136, 19);
             this.cboCadVersion.Name = "cboCadVersion";
-            this.cboCadVersion.Size = new System.Drawing.Size(208, 21);
+            this.cboCadVersion.Size = new System.Drawing.Size(284, 21);
             this.cboCadVersion.TabIndex = 2;
             this.cboCadVersion.SelectedIndexChanged += new System.EventHandler(this.cboCadVersion_SelectedIndexChanged);
             // 
@@ -82,38 +114,13 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Select Autocad Version";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 56);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(120, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Drawing Collection Path";
-            // 
-            // txtCollectionFolder
-            // 
-            this.txtCollectionFolder.Location = new System.Drawing.Point(136, 51);
-            this.txtCollectionFolder.Name = "txtCollectionFolder";
-            this.txtCollectionFolder.Size = new System.Drawing.Size(166, 20);
-            this.txtCollectionFolder.TabIndex = 4;
-            // 
-            // btnBrowseFile
-            // 
-            this.btnBrowseFile.Location = new System.Drawing.Point(308, 51);
-            this.btnBrowseFile.Name = "btnBrowseFile";
-            this.btnBrowseFile.Size = new System.Drawing.Size(36, 23);
-            this.btnBrowseFile.TabIndex = 5;
-            this.btnBrowseFile.Text = "...";
-            this.btnBrowseFile.UseVisualStyleBackColor = true;
-            this.btnBrowseFile.Click += new System.EventHandler(this.btnBrowseFile_Click);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(359, 450);
+            this.ClientSize = new System.Drawing.Size(433, 133);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";

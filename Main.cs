@@ -4,13 +4,11 @@ using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.Interop.Common;
 using System;
 using System.Data;
-using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace AutocadInitialization
@@ -22,9 +20,8 @@ namespace AutocadInitialization
         //private AcadDocument AcadDoc;
         private AutoCADWrapper.Document AcadDoc;
         private AutoCADWrapper.Application AcadApp;
-        string folderpath = string.Empty;
-        private AttributeData attributeData = new AttributeData();
-        private ListViewItemArranger listItemArranger ;
+        private AttributeData attributeData;
+        private ListViewItemArranger listItemArranger;
         private SqliteClass objSqlite;
         public static string dbPath = System.Windows.Forms.Application.StartupPath + "\\support\\settings.dat";
 
@@ -119,9 +116,6 @@ namespace AutocadInitialization
             string sheetNo = excelWorksheet.Cells[9, 2].Value.ToString();
 
             AcadApplication acadApp;
-            // AutoCADWrapper.Application acadApp = new AutoCADWrapper.Application();
-            //acadApp.Initialize("24.1", true);
-
             try
             {
                 acadApp = (AcadApplication)Marshal.GetActiveObject("AutoCAD.Application.24.1");
@@ -308,8 +302,9 @@ namespace AutocadInitialization
         private void copyDbFile()
         {
             string localFilePath = IO.UserDataFolder();
-            Global.localDbPath = localFilePath +"\\settings.dat";
-            if (!File.Exists(Global.localDbPath)) {
+            Global.localDbPath = localFilePath + "\\settings.dat";
+            if (!File.Exists(Global.localDbPath))
+            {
                 File.Copy(dbPath, Global.localDbPath);
             }
             else
@@ -321,29 +316,32 @@ namespace AutocadInitialization
         {
             objSqlite = new SqliteClass(Global.localDbPath);
             DataTable dt = objSqlite.ReadDataFromTable("*", "tblsettings", "id=1");
-            if (dt.Rows.Count > 0) {
-                foreach (DataRow dr in dt.Rows) {
-                    Global.selectedCadVersion = (double) dr["cadVersion"];
-                    folderpath = (string)dr["dwgfolderpath"].ToString();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    Global.selectedCadVersion = (double)dr["cadVersion"];
+                    Global.dwgFolderpath = (string)dr["dwgfolderpath"].ToString();
                 }
             }
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            if(folderpath == string.Empty) {
+            if (Global.dwgFolderpath == string.Empty)
+            {
                 MessageBox.Show("You can set the drawing file directory in setting page.", "Setting", MessageBoxButtons.OK);
                 return;
             }
             //FolderBrowserDialog dialog = new FolderBrowserDialog();
             //if (dialog.ShowDialog() != DialogResult.OK) return;
             //folderpath = dialog.SelectedPath;
-            LoadDwgFiles(folderpath);
+            LoadDwgFiles(Global.dwgFolderpath);
         }
         private void LoadDwgFiles(string fpath)
         {
             lvDrawingsFrom.Items.Clear();
-            foreach (string file in Directory.GetFiles(folderpath))
+            foreach (string file in Directory.GetFiles(Global.dwgFolderpath))
             {
                 string extension = Path.GetExtension(file);
                 if (extension == ".dwg")
@@ -372,15 +370,22 @@ namespace AutocadInitialization
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void btnExecute_Click(object sender, EventArgs e)
         {
-            //read excel first
-            //ReadExcelData();
+            if (attributeData == null)
+            {
+                MessageBox.Show("Please read data from Excel First.", "Read Excel", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            AutoCADWrapper.Application app = new AutoCADWrapper.Application();
+            app.Initialize("24.1", true);
+
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            LoadDwgFiles(folderpath);
+            LoadDwgFiles(Global.dwgFolderpath);
         }
 
         private void btnReadExcel_Click(object sender, EventArgs e)
@@ -455,7 +460,7 @@ namespace AutocadInitialization
         private void btnToRight_Click(object sender, EventArgs e)
         {
             //object selectedItem;
-            
+
             foreach (ListViewItem selectedItem in lvDrawingsFrom.CheckedItems)
             {
                 lvDrawingsTo.Items.Add(selectedItem.Text.ToString());
@@ -465,11 +470,13 @@ namespace AutocadInitialization
             ListViewItem selectedItm;
             while (selectedCount > 0)
             {
-                    selectedItm = lvDrawingsFrom.CheckedItems[0];
-                    lvDrawingsFrom.Items.Remove(selectedItm);
-                    selectedCount = lvDrawingsFrom.CheckedItems.Count;
+                selectedItm = lvDrawingsFrom.CheckedItems[0];
+                lvDrawingsFrom.Items.Remove(selectedItm);
+                selectedCount = lvDrawingsFrom.CheckedItems.Count;
             }
-            chkSelect.Checked = false;
+            chkSelectTo.Enabled = lvDrawingsTo.Items.Count != 0;
+            chkSelect.Checked = lvDrawingsFrom.Items.Count != 0;
+            chkSelect.Enabled = lvDrawingsFrom.Items.Count != 0;
             chkSelect.Text = "Select All";
         }
 
@@ -488,7 +495,9 @@ namespace AutocadInitialization
                 lvDrawingsTo.Items.Remove(selectedItm);
                 selectedCount = lvDrawingsTo.CheckedItems.Count;
             }
-            chkSelectTo.Checked = false;
+            chkSelect.Enabled = lvDrawingsFrom.Items.Count != 0;
+            chkSelectTo.Enabled = lvDrawingsTo.Items.Count != 0;
+            chkSelectTo.Checked = lvDrawingsTo.Items.Count != 0;
             chkSelectTo.Text = "Select All";
         }
 

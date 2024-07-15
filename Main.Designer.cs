@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnDraw = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.lvDrawingsFrom = new System.Windows.Forms.ListView();
             this.colDwgName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chkSelect = new System.Windows.Forms.CheckBox();
-            this.button7 = new System.Windows.Forms.Button();
+            this.btnExecute = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.txtDrawingName = new System.Windows.Forms.TextBox();
@@ -100,15 +100,15 @@
             this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button3
+            // btnDraw
             // 
-            this.button3.Location = new System.Drawing.Point(692, 60);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(76, 23);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "Draw";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnDraw.Location = new System.Drawing.Point(701, 146);
+            this.btnDraw.Name = "btnDraw";
+            this.btnDraw.Size = new System.Drawing.Size(67, 23);
+            this.btnDraw.TabIndex = 2;
+            this.btnDraw.Text = "Draw";
+            this.btnDraw.UseVisualStyleBackColor = true;
+            this.btnDraw.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -122,8 +122,8 @@
             // 
             // lvDrawingsFrom
             // 
-            this.lvDrawingsFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.lvDrawingsFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvDrawingsFrom.CheckBoxes = true;
             this.lvDrawingsFrom.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -149,6 +149,7 @@
             // 
             this.chkSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkSelect.AutoSize = true;
+            this.chkSelect.Enabled = false;
             this.chkSelect.Location = new System.Drawing.Point(8, 184);
             this.chkSelect.Name = "chkSelect";
             this.chkSelect.Size = new System.Drawing.Size(70, 17);
@@ -157,16 +158,16 @@
             this.chkSelect.UseVisualStyleBackColor = true;
             this.chkSelect.CheckedChanged += new System.EventHandler(this.chkSelect_CheckedChanged);
             // 
-            // button7
+            // btnExecute
             // 
-            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(713, 250);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(67, 23);
-            this.button7.TabIndex = 9;
-            this.button7.Text = "Execute";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExecute.Location = new System.Drawing.Point(713, 250);
+            this.btnExecute.Name = "btnExecute";
+            this.btnExecute.Size = new System.Drawing.Size(67, 23);
+            this.btnExecute.TabIndex = 9;
+            this.btnExecute.Text = "Execute";
+            this.btnExecute.UseVisualStyleBackColor = true;
+            this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
             // 
             // groupBox1
             // 
@@ -177,7 +178,7 @@
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.button3);
+            this.groupBox1.Controls.Add(this.btnDraw);
             this.groupBox1.Controls.Add(this.btnSettings);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
@@ -610,8 +611,8 @@
             // 
             // lvDrawingsTo
             // 
-            this.lvDrawingsTo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.lvDrawingsTo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvDrawingsTo.CheckBoxes = true;
             this.lvDrawingsTo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -638,6 +639,7 @@
             // 
             this.chkSelectTo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkSelectTo.AutoSize = true;
+            this.chkSelectTo.Enabled = false;
             this.chkSelectTo.Location = new System.Drawing.Point(6, 181);
             this.chkSelectTo.Name = "chkSelectTo";
             this.chkSelectTo.Size = new System.Drawing.Size(70, 17);
@@ -751,8 +753,10 @@
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button7);
+            this.Controls.Add(this.btnExecute);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Drawing Generator";
@@ -780,13 +784,13 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnDraw;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ListView lvDrawingsFrom;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.ColumnHeader colDwgName;
         internal System.Windows.Forms.CheckBox chkSelect;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button btnExecute;
         private System.Windows.Forms.Button btnReload;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;

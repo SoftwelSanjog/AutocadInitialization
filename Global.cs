@@ -4,8 +4,9 @@ namespace AutocadInitialization
 {
     public class Global
     {
-        public static double selectedCadVersion { get; set; } = 24.2;
+        public static double selectedCadVersion { get; set; } = 24.1;
         public static string localDbPath { get; set; }
+        public static string dwgFolderpath { get; set; }
         public static Version CurrentVersion
         {
             get
