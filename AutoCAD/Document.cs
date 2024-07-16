@@ -1,11 +1,5 @@
 ﻿using Autodesk.AutoCAD.Interop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
-using System.Xml.Schema;
 
 namespace AutoCADWrapper
 {
@@ -16,7 +10,7 @@ namespace AutoCADWrapper
         {
             get
             {
-                return InvokeAcadDocumentMethod("Name",BindingFlags.GetProperty,null);
+                return InvokeAcadDocumentMethod("Name", BindingFlags.GetProperty, null);
             }
         }
         public AcadDocument GetDocumentObject()
@@ -25,7 +19,7 @@ namespace AutoCADWrapper
         }
         public void SetDocumentObject(object acadDoc)
         {
-            acadDocument = (AcadDocument) acadDoc;
+            acadDocument = (AcadDocument)acadDoc;
         }
         public object ActiveViewPort()
         {
@@ -33,7 +27,11 @@ namespace AutoCADWrapper
         }
         public object Layers()
         {
-            return InvokeAcadDocumentMethod("Layers",BindingFlags.GetProperty, null);
+            return InvokeAcadDocumentMethod("Layers", BindingFlags.GetProperty, null);
+        }
+        public object Layouts()
+        {
+            return InvokeAcadDocumentMethod("Layouts", BindingFlags.GetProperty, null);
         }
         public object ActiveLayer
         {
@@ -43,14 +41,14 @@ namespace AutoCADWrapper
             }
             set
             {
-               InvokeAcadDocumentMethod("ActiveLayer",BindingFlags.SetProperty, new object[] { value });
+                InvokeAcadDocumentMethod("ActiveLayer", BindingFlags.SetProperty, new object[] { value });
             }
         }
         public object Blocks
         {
             get
             {
-                return InvokeAcadDocumentMethod("Blocks", BindingFlags.GetProperty, null); 
+                return InvokeAcadDocumentMethod("Blocks", BindingFlags.GetProperty, null);
             }
         }
         public ModelSpace ModelSpace()
@@ -69,7 +67,7 @@ namespace AutoCADWrapper
 
         private object InvokeAcadDocumentMethod(string methodName, BindingFlags bindingFlags, object[] args)
         {
-            return acadDocument.GetType().InvokeMember(methodName, bindingFlags,null,acadDocument, args);
+            return acadDocument.GetType().InvokeMember(methodName, bindingFlags, null, acadDocument, args);
         }
 
     }

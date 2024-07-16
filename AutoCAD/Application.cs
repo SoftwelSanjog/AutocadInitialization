@@ -92,16 +92,19 @@ namespace AutoCADWrapper
                 return InvokeAcadApplicationMethod("Documents", BindingFlags.GetProperty, null);
             }
         }
-        public void openDwgFile(string filename)
+        public object openDwgFile(string filename)
         {
-            object documents = Documents;
-            InvokeAcadApplicationMethod("Open", BindingFlags.InvokeMethod, new object[] { filename });
+            object doc = Documents;
+            return InvokeMethod(doc, "Open", BindingFlags.InvokeMethod, new object[] { filename });
         }
         private object InvokeAcadApplicationMethod(string methodName, BindingFlags bindingFlags, object[] args)
         {
             return acadApplication.GetType().InvokeMember(methodName, bindingFlags, null, acadApplication, args);
         }
-
+        private object InvokeMethod(object comObject, string methodName, BindingFlags bindingFlags, object[] args)
+        {
+            return comObject.GetType().InvokeMember(methodName, bindingFlags, null, comObject, args);
+        }
 
         public void Update()
         {

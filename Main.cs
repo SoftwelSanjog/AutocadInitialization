@@ -6,6 +6,7 @@ using System;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -51,17 +52,17 @@ namespace AutocadInitialization
             //chkDesignedDate.Tag = nameof(attributeData.isDate);
             //chkDrawingName.Tag = nameof(attributeData.isDrawingName);
 
-            chkHead.Tag = new Tuple<TextBox, string>(txtHead, nameof(attributeData.isClientHead));
-            chkDepartment.Tag = new Tuple<TextBox, string>(txtDepartment, nameof(attributeData.isDepartment));
-            chkDivision.Tag = new Tuple<TextBox, string>(txtDivision, nameof(attributeData.isDivision));
-            chkLocation.Tag = new Tuple<TextBox, string>(txtLocation, nameof(attributeData.isClientLocation));
-            chkFirmName.Tag = new Tuple<TextBox, string>(txtFirmName, nameof(attributeData.isFirmName));
-            chkFirmLocation.Tag = new Tuple<TextBox, string>(txtFirmLocation, nameof(attributeData.isFirmLocation));
-            chkProjectName.Tag = new Tuple<TextBox, string>(txtProjectName, nameof(attributeData.isProjectName));
-            chkProjectLocation.Tag = new Tuple<TextBox, string>(txtProjectLocation, nameof(attributeData.isProjectLocation));
-            chkDesignerName.Tag = new Tuple<TextBox, string>(txtDesignerName, nameof(attributeData.isDesigner));
-            chkDesignedDate.Tag = new Tuple<TextBox, string>(txtDesignedDate, nameof(attributeData.isDate));
-            chkDrawingName.Tag = new Tuple<TextBox, string>(txtDrawingName, nameof(attributeData.isDrawingName));
+            chkHead.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtHead, nameof(attributeData.isClientHead));
+            chkDepartment.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtDepartment, nameof(attributeData.isDepartment));
+            chkDivision.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtDivision, nameof(attributeData.isDivision));
+            chkLocation.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtLocation, nameof(attributeData.isClientLocation));
+            chkFirmName.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtFirmName, nameof(attributeData.isFirmName));
+            chkFirmLocation.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtFirmLocation, nameof(attributeData.isFirmLocation));
+            chkProjectName.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtProjectName, nameof(attributeData.isProjectName));
+            chkProjectLocation.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtProjectLocation, nameof(attributeData.isProjectLocation));
+            chkDesignerName.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtDesignerName, nameof(attributeData.isDesigner));
+            chkDesignedDate.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtDesignedDate, nameof(attributeData.isDate));
+            chkDrawingName.Tag = new Tuple<System.Windows.Forms.TextBox, string>(txtDrawingName, nameof(attributeData.isDrawingName));
         }
         private int getProcessId()
         {
@@ -315,7 +316,7 @@ namespace AutocadInitialization
         private void readSettings()
         {
             objSqlite = new SqliteClass(Global.localDbPath);
-            DataTable dt = objSqlite.ReadDataFromTable("*", "tblsettings", "id=1");
+            System.Data.DataTable dt = objSqlite.ReadDataFromTable("*", "tblsettings", "id=1");
             if (dt.Rows.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)
@@ -377,9 +378,127 @@ namespace AutocadInitialization
                 MessageBox.Show("Please read data from Excel First.", "Read Excel", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            if (lvDrawingsTo.Items.Count == 0)
+            {
+                MessageBox.Show("Please select the drawing to execute.", "Select", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             AutoCADWrapper.Application app = new AutoCADWrapper.Application();
-            app.Initialize("24.1", true);
+
+            try
+            {
+                app.Initialize("24.1", true);
+                int retryCount = 5;
+                int delay = 2000;
+                while (retryCount > 0)
+                {
+                    try
+                    {
+                        string dwgFilePath = @"C:\Users\shaky\Downloads\00 Drawing Test\08 VALVE CHAMBER.dwg";
+                        //AcadDocument acadDoc = acadApp.Documents.Open(dwgFilePath);
+                        AutoCADWrapper.Document acadDoc = (app.openDwgFile(dwgFilePath);
+                        Console.WriteLine(acadDoc.Name);
+
+                        try
+                        {
+                            object entities = null;
+                            object layouts = acadDoc.Layouts();
+                            int count = (int)InvokeMethod(layouts, "Count", BindingFlags.GetProperty, null);
+                            for (int i = 0; i < count; i++)
+                            {
+                                object layout = InvokeMethod(layouts, "Item", BindingFlags.GetProperty, new object[] { i });
+                                string name = (string)InvokeMethod(layout, "Name", BindingFlags.GetProperty, null);
+                                Console.WriteLine($"Processing Layout : {name}");
+
+                                object block = InvokeMethod(layout, "Block", BindingFlags.GetProperty, null);
+                                entities = block;
+                                int countBlock = (int)InvokeMethod(entities, "Count", BindingFlags.GetProperty, null);
+
+                                //AcadBlock block = (AcadBlock)layout.Block;
+                                for (int j = 0; j < countBlock; j++)
+                                {
+                                    object entity = InvokeMethod(entities, "Item", BindingFlags.GetProperty, null);
+                                    string entityType = (string)InvokeMethod(entity, "EntityType", BindingFlags.GetProperty, null);
+                                    if (entityType == "AcDbBlockReference")
+                                    {
+
+                                        //if (entity.Eff != "A3_Template_New") continue;
+                                        AcadBlockReference blockRef = (AcadBlockReference)entity;
+                                        Console.WriteLine($"Found block reference: {blockRef.Name}");
+
+                                        if (blockRef.Name != "A3_Template_New") continue;
+                                        foreach (AcadAttributeReference attrRef in blockRef.GetAttributes())
+                                        {
+                                            Console.WriteLine($"Processing attribute: {attrRef.TagString}");
+
+                                            switch (attrRef.TagString.ToUpper())
+                                            {
+                                                case "DESIGNER":
+                                                    attrRef.TextString = attributeData.Designer;
+                                                    break;
+                                                case "DATE":
+                                                    attrRef.TextString = attributeData.Date;
+                                                    break;
+                                                case "DWG_TITLE":
+                                                    attrRef.TextString = attributeData.ProjectName;
+                                                    break;
+                                                case "PROJECT_NAME":
+                                                    attrRef.TextString = attributeData.ProjectName;
+                                                    break;
+                                                case "PROJECT_LOCATION":
+                                                    attrRef.TextString = attributeData.ProjectLocation;
+                                                    break;
+                                                case "DWG_NO":
+                                                    attrRef.TextString = attributeData.DrawingNo;
+                                                    break;
+                                                case "SHEET_NO":
+                                                    attrRef.TextString = attributeData.SheetNo;
+                                                    break;
+                                            }
+                                            attrRef.Update();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error processing {dwgFilePath}: {ex.Message}");
+                        }
+                        //acadDoc.Save();
+                        //acadDoc.Close();
+
+                    }
+                    catch (COMException comEx)
+                    {
+                        if ((uint)comEx.ErrorCode == 0x80010001) // RPC_E_CALL_REJECTED
+                        {
+                            retryCount--;
+                            Console.WriteLine("Call was rejected by callee, retrying...");
+                            Thread.Sleep(delay);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    break;
+                }
+                if (retryCount == 0)
+                {
+                    Console.WriteLine("Failed to process");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to initialize Autocad Application.");
+            }
+            finally
+            {
+                app.Finalized();
+            }
+
 
         }
 
@@ -426,7 +545,7 @@ namespace AutocadInitialization
         private void chk_CheckedChanged(object sender, EventArgs e)
         {
             System.Windows.Forms.CheckBox checkbox = sender as System.Windows.Forms.CheckBox;
-            if (checkbox != null && checkbox.Tag is Tuple<TextBox, string> tag)
+            if (checkbox != null && checkbox.Tag is Tuple<System.Windows.Forms.TextBox, string> tag)
             {
                 //string propName = checkbox.Tag as string;
                 //if (propName != null)
@@ -435,7 +554,7 @@ namespace AutocadInitialization
                 //    typeof(AttributeData).GetProperty(propName).SetValue(attributeData, checkbox.Checked);
                 //}
 
-                TextBox textBox = tag.Item1 as TextBox;
+                System.Windows.Forms.TextBox textBox = tag.Item1 as System.Windows.Forms.TextBox;
                 string propName = tag.Item2 as string;
                 typeof(AttributeData).GetProperty(propName)?.SetValue(attributeData, checkbox.Checked);
                 textBox.Enabled = checkbox.Checked;
@@ -538,6 +657,11 @@ namespace AutocadInitialization
         private void Settings_SettingChanged(object sender, EventArgs e)
         {
             readSettings();
+        }
+        // Helper method to invoke methods on COM objects
+        private object InvokeMethod(object comObject, string methodName, BindingFlags bindingFlags, object[] args)
+        {
+            return comObject.GetType().InvokeMember(methodName, bindingFlags, null, comObject, args);
         }
     }
 }

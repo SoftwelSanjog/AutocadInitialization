@@ -27,6 +27,5 @@
         public bool isDesigner { get; set; } = true;
         public bool isDate { get; set; } = true;
         public bool isDrawingName { get; set; } = true;
-
     }
 }

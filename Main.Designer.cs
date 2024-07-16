@@ -102,9 +102,9 @@
             // 
             // btnDraw
             // 
-            this.btnDraw.Location = new System.Drawing.Point(701, 146);
+            this.btnDraw.Location = new System.Drawing.Point(697, 146);
             this.btnDraw.Name = "btnDraw";
-            this.btnDraw.Size = new System.Drawing.Size(67, 23);
+            this.btnDraw.Size = new System.Drawing.Size(71, 23);
             this.btnDraw.TabIndex = 2;
             this.btnDraw.Text = "Draw";
             this.btnDraw.UseVisualStyleBackColor = true;
@@ -122,8 +122,8 @@
             // 
             // lvDrawingsFrom
             // 
-            this.lvDrawingsFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lvDrawingsFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvDrawingsFrom.CheckBoxes = true;
             this.lvDrawingsFrom.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -611,8 +611,8 @@
             // 
             // lvDrawingsTo
             // 
-            this.lvDrawingsTo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lvDrawingsTo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvDrawingsTo.CheckBoxes = true;
             this.lvDrawingsTo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -621,10 +621,10 @@
             this.lvDrawingsTo.GridLines = true;
             this.lvDrawingsTo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvDrawingsTo.HideSelection = false;
-            this.lvDrawingsTo.Location = new System.Drawing.Point(6, 26);
+            this.lvDrawingsTo.Location = new System.Drawing.Point(6, 19);
             this.lvDrawingsTo.MultiSelect = false;
             this.lvDrawingsTo.Name = "lvDrawingsTo";
-            this.lvDrawingsTo.Size = new System.Drawing.Size(358, 146);
+            this.lvDrawingsTo.Size = new System.Drawing.Size(358, 153);
             this.lvDrawingsTo.TabIndex = 14;
             this.lvDrawingsTo.UseCompatibleStateImageBehavior = false;
             this.lvDrawingsTo.View = System.Windows.Forms.View.Details;
@@ -651,9 +651,9 @@
             // btnUp
             // 
             this.btnUp.Image = global::AutocadInitialization.Properties.Resources.sort_up_16px;
-            this.btnUp.Location = new System.Drawing.Point(335, 26);
+            this.btnUp.Location = new System.Drawing.Point(345, 26);
             this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(29, 36);
+            this.btnUp.Size = new System.Drawing.Size(19, 36);
             this.btnUp.TabIndex = 19;
             this.btnUp.UseVisualStyleBackColor = true;
             this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
@@ -685,9 +685,9 @@
             // btnDown
             // 
             this.btnDown.Image = global::AutocadInitialization.Properties.Resources.sort_down_16px;
-            this.btnDown.Location = new System.Drawing.Point(300, 26);
+            this.btnDown.Location = new System.Drawing.Point(307, 26);
             this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(29, 36);
+            this.btnDown.Size = new System.Drawing.Size(20, 36);
             this.btnDown.TabIndex = 18;
             this.btnDown.UseVisualStyleBackColor = true;
             this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
@@ -759,7 +759,7 @@
             this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Drawing Generator";
+            this.Text = "Generate AutoCAD Drawing";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
