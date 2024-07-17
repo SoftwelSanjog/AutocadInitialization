@@ -2,9 +2,7 @@
 using AutoCADWrapper;
 using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.Interop.Common;
-using Microsoft.Office.Interop.Excel;
 using System;
-using System.ComponentModel.Design;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -409,15 +407,15 @@ namespace AutocadInitialization
                 MessageBox.Show("Please select the drawing to execute.", "Select", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            var files = Directory.EnumerateFiles(txtFolderPath.Text,"*.*",SearchOption.AllDirectories)
-                            .Select(file=> new FileInfo(file));
+            var files = Directory.EnumerateFiles(txtFolderPath.Text, "*.*", SearchOption.AllDirectories)
+                            .Select(file => new FileInfo(file));
             int fileCount = files.Count();
             if (fileCount > 0)
             {
                 DialogResult result = MessageBox.Show("Folder contains files. Do you want to delete those files first?", "Delete Files", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if(result == DialogResult.Yes)
+                if (result == DialogResult.Yes)
                 {
-                    foreach(var file in files)
+                    foreach (var file in files)
                     {
                         file.Delete();
                     }
@@ -435,15 +433,15 @@ namespace AutocadInitialization
             {
                 app.Initialize(Global.selectedCadVersion.ToString(), true);
                 //Copy the selected drawing to the destination folder 
-                
+
                 foreach (ListViewItem lvItem in lvDrawingsTo.CheckedItems)
                 {
                     string FileName = lvItem.Text;
                     string sourceFilePath = Path.Combine(Global.dwgFolderpath, FileName + ".dwg");
-                    string destinationFilePath = Path.Combine(Global.dwgFolderpathCopied, FileName+ ".dwg");
+                    string destinationFilePath = Path.Combine(Global.dwgFolderpathCopied, FileName + ".dwg");
                     File.Copy(sourceFilePath, destinationFilePath, true);
                     try
-                    {                        
+                    {
                         int retryCount = 5;
                         int delay = 2000;
                         //while (retryCount > 0)
@@ -474,7 +472,7 @@ namespace AutocadInitialization
                                         foreach (AcadAttributeReference attrRef in blockRef.GetAttributes())
                                         {
                                             tsStatus.Text = $"Processing attribute: {attrRef.TagString}";
-
+                                            #region Replacing attributes
                                             switch (attrRef.TagString.ToUpper())
                                             {
                                                 case "DESIGNER":
@@ -515,29 +513,45 @@ namespace AutocadInitialization
                                                     break;
                                             }
                                             attrRef.Update();
+                                            #endregion
                                         }
                                     }
                                 }
+                                //acadDocs.Regen(AcRegenType.acAllViewports);
+                                //sets print the layout blocks
+
                             }
+                            PrintByBlock printBlock = new PrintByBlock(acadDocs)
+                            {
+                                LayerName = "SHEET",
+                                BlockName = "A3_Template_New"
+                            };
+
+                            printBlock.Print();
+
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error processing {destinationFilePath}: {ex.Message}");
                         }
-                        acadDocs.Save();
-                        acadDocs.Close();
-                       
+                        finally
+                        {
+                            acadDocs.Save();
+                            acadDocs.Close();
+                        }
+
+
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Failed to initialize Autocad Application.");
+                        Console.WriteLine("call was rejected by callee. Failed to initialize Autocad Application.");
                     }
                     finally
                     {
                         if (acadDocs != null)
                         {
                             Marshal.ReleaseComObject(acadDocs);
-                            acadDocs = null; 
+                            acadDocs = null;
                         }
                     }
                 }
