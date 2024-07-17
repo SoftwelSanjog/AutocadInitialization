@@ -89,6 +89,10 @@
             this.btnToLeft = new System.Windows.Forms.Button();
             this.btnToRight = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtFolderPath = new System.Windows.Forms.TextBox();
+            this.btnBrowsePath = new System.Windows.Forms.Button();
+            this.txtDwgFolderPath = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -139,6 +143,7 @@
             this.lvDrawingsFrom.TabIndex = 6;
             this.lvDrawingsFrom.UseCompatibleStateImageBehavior = false;
             this.lvDrawingsFrom.View = System.Windows.Forms.View.Details;
+            this.lvDrawingsFrom.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.lvDrawingsFrom_ItemChecked);
             // 
             // colDwgName
             // 
@@ -161,7 +166,7 @@
             // btnExecute
             // 
             this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExecute.Location = new System.Drawing.Point(713, 250);
+            this.btnExecute.Location = new System.Drawing.Point(719, 244);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(67, 23);
             this.btnExecute.TabIndex = 9;
@@ -696,7 +701,7 @@
             // 
             this.btnReload.Image = global::AutocadInitialization.Properties.Resources.synchronize_16px;
             this.btnReload.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReload.Location = new System.Drawing.Point(93, 247);
+            this.btnReload.Location = new System.Drawing.Point(309, 250);
             this.btnReload.Name = "btnReload";
             this.btnReload.Size = new System.Drawing.Size(66, 23);
             this.btnReload.TabIndex = 10;
@@ -740,11 +745,50 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(381, 254);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(29, 13);
+            this.label12.TabIndex = 10;
+            this.label12.Text = "Path";
+            // 
+            // txtFolderPath
+            // 
+            this.txtFolderPath.Location = new System.Drawing.Point(416, 247);
+            this.txtFolderPath.Name = "txtFolderPath";
+            this.txtFolderPath.Size = new System.Drawing.Size(266, 20);
+            this.txtFolderPath.TabIndex = 9;
+            // 
+            // btnBrowsePath
+            // 
+            this.btnBrowsePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowsePath.Location = new System.Drawing.Point(684, 244);
+            this.btnBrowsePath.Name = "btnBrowsePath";
+            this.btnBrowsePath.Size = new System.Drawing.Size(35, 23);
+            this.btnBrowsePath.TabIndex = 22;
+            this.btnBrowsePath.Text = "...";
+            this.btnBrowsePath.UseVisualStyleBackColor = true;
+            this.btnBrowsePath.Click += new System.EventHandler(this.btnBrowsePath_Click);
+            // 
+            // txtDwgFolderPath
+            // 
+            this.txtDwgFolderPath.Location = new System.Drawing.Point(99, 250);
+            this.txtDwgFolderPath.Name = "txtDwgFolderPath";
+            this.txtDwgFolderPath.ReadOnly = true;
+            this.txtDwgFolderPath.Size = new System.Drawing.Size(204, 20);
+            this.txtDwgFolderPath.TabIndex = 23;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 517);
+            this.Controls.Add(this.txtDwgFolderPath);
+            this.Controls.Add(this.btnBrowsePath);
+            this.Controls.Add(this.txtFolderPath);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.btnReload);
@@ -844,6 +888,10 @@
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtFolderPath;
+        private System.Windows.Forms.Button btnBrowsePath;
+        private System.Windows.Forms.TextBox txtDwgFolderPath;
     }
 }
 

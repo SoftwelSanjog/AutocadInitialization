@@ -15,6 +15,14 @@ namespace AutoCADWrapper
         //private AcadDocument acadDocument;
         private const string progId = "AutoCAD.Application.24.1";
 
+        public AcadApplication AcadApplication
+        {
+            get
+            {
+                return acadApplication;
+            }
+        }
+
         public Application()
         {
 
@@ -65,7 +73,8 @@ namespace AutoCADWrapper
         {
             try
             {
-                acadApplication.Quit();
+                Marshal.ReleaseComObject(acadApplication);
+                //acadApplication.Quit();
                 //if the normal process doesnot kill the process then second time process killing
                 if (currentAcadProcessId > 0)
                 {

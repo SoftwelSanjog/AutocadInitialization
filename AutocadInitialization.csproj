@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="AttributeData.cs" />
     <Compile Include="AutoCAD\Application.cs" />
+    <Compile Include="AutoCAD\AutocadWrapper.cs" />
     <Compile Include="AutoCAD\Document.cs" />
     <Compile Include="AutoCAD\ModelSpace.cs" />
     <Compile Include="AutoCAD\Utility.cs" />

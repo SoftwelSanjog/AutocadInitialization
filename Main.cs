@@ -2,10 +2,13 @@
 using AutoCADWrapper;
 using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.Interop.Common;
+using Microsoft.Office.Interop.Excel;
 using System;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -20,6 +23,7 @@ namespace AutocadInitialization
         //private AcadApplication AcadApp;
         //private AcadDocument AcadDoc;
         private AutoCADWrapper.Document AcadDoc;
+        private AcadDocument acadDocs;
         private AutoCADWrapper.Application AcadApp;
         private AttributeData attributeData;
         private ListViewItemArranger listItemArranger;
@@ -329,15 +333,27 @@ namespace AutocadInitialization
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            if (Global.dwgFolderpath == string.Empty)
+            if (Global.dwgFolderpath == null || !Directory.Exists(Global.dwgFolderpath))
             {
-                MessageBox.Show("You can set the drawing file directory in setting page.", "Setting", MessageBoxButtons.OK);
+                MessageBox.Show("Please set the drawing collection path in setting.", "Path", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            else
+            {
+                LoadDwgFiles(Global.dwgFolderpath);
+            }
+            txtDwgFolderPath.Text = Global.dwgFolderpath;
+
+
+            //if (Global.dwgFolderpath == string.Empty)
+            //{
+            //    MessageBox.Show("You can set the drawing file directory in setting page.", "Setting", MessageBoxButtons.OK);
+            //    return;
+            //}
             //FolderBrowserDialog dialog = new FolderBrowserDialog();
             //if (dialog.ShowDialog() != DialogResult.OK) return;
             //folderpath = dialog.SelectedPath;
-            LoadDwgFiles(Global.dwgFolderpath);
+
         }
         private void LoadDwgFiles(string fpath)
         {
@@ -373,6 +389,16 @@ namespace AutocadInitialization
 
         private void btnExecute_Click(object sender, EventArgs e)
         {
+            if (txtFolderPath.Text == string.Empty)
+            {
+                MessageBox.Show("Please choose folder path to copy the drawings.", "Path", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (!Directory.Exists(txtFolderPath.Text))
+            {
+                MessageBox.Show("Directory doesnot exist. Please create the folder and try again.", "Folder Not Exist.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             if (attributeData == null)
             {
                 MessageBox.Show("Please read data from Excel First.", "Read Excel", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -383,54 +409,71 @@ namespace AutocadInitialization
                 MessageBox.Show("Please select the drawing to execute.", "Select", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            var files = Directory.EnumerateFiles(txtFolderPath.Text,"*.*",SearchOption.AllDirectories)
+                            .Select(file=> new FileInfo(file));
+            int fileCount = files.Count();
+            if (fileCount > 0)
+            {
+                DialogResult result = MessageBox.Show("Folder contains files. Do you want to delete those files first?", "Delete Files", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if(result == DialogResult.Yes)
+                {
+                    foreach(var file in files)
+                    {
+                        file.Delete();
+                    }
+                }
+                else
+                {
+                    tsStatus.Text = "Operation Terminated.";
+                    return;
+                }
+            }
+
 
             AutoCADWrapper.Application app = new AutoCADWrapper.Application();
-
             try
             {
-                app.Initialize("24.1", true);
-                int retryCount = 5;
-                int delay = 2000;
-                while (retryCount > 0)
+                app.Initialize(Global.selectedCadVersion.ToString(), true);
+                //Copy the selected drawing to the destination folder 
+                
+                foreach (ListViewItem lvItem in lvDrawingsTo.CheckedItems)
                 {
+                    string FileName = lvItem.Text;
+                    string sourceFilePath = Path.Combine(Global.dwgFolderpath, FileName + ".dwg");
+                    string destinationFilePath = Path.Combine(Global.dwgFolderpathCopied, FileName+ ".dwg");
+                    File.Copy(sourceFilePath, destinationFilePath, true);
                     try
-                    {
-                        string dwgFilePath = @"C:\Users\shaky\Downloads\00 Drawing Test\08 VALVE CHAMBER.dwg";
-                        //AcadDocument acadDoc = acadApp.Documents.Open(dwgFilePath);
-                        AutoCADWrapper.Document acadDoc = (app.openDwgFile(dwgFilePath);
-                        Console.WriteLine(acadDoc.Name);
-
+                    {                        
+                        int retryCount = 5;
+                        int delay = 2000;
+                        //while (retryCount > 0)
+                        //{
+                        //try
+                        //{
+                        //string dwgFilePath = @"C:\Users\shaky\Downloads\00 Drawing Test\08 VALVE CHAMBER.dwg";
+                        //string dwgFilePath = @"C:\Users\Sanjog Shakya\Downloads\AutocadTest\08 VALVE CHAMBER.dwg";
+                        acadDocs = app.AcadApplication.Documents.Open(destinationFilePath);
+                        tsStatus.Text = "Now Processing " + acadDocs.Name;
                         try
                         {
-                            object entities = null;
-                            object layouts = acadDoc.Layouts();
-                            int count = (int)InvokeMethod(layouts, "Count", BindingFlags.GetProperty, null);
-                            for (int i = 0; i < count; i++)
+                            foreach (AcadLayout layout in acadDocs.Layouts)
                             {
-                                object layout = InvokeMethod(layouts, "Item", BindingFlags.GetProperty, new object[] { i });
-                                string name = (string)InvokeMethod(layout, "Name", BindingFlags.GetProperty, null);
-                                Console.WriteLine($"Processing Layout : {name}");
+                                //tsStatus.Text = $"Processing Layout : {layout.Name}";
+                                Thread.Sleep(delay);
 
-                                object block = InvokeMethod(layout, "Block", BindingFlags.GetProperty, null);
-                                entities = block;
-                                int countBlock = (int)InvokeMethod(entities, "Count", BindingFlags.GetProperty, null);
-
-                                //AcadBlock block = (AcadBlock)layout.Block;
-                                for (int j = 0; j < countBlock; j++)
+                                AcadBlock block = (AcadBlock)layout.Block;
+                                foreach (AcadEntity entity in block)
                                 {
-                                    object entity = InvokeMethod(entities, "Item", BindingFlags.GetProperty, null);
-                                    string entityType = (string)InvokeMethod(entity, "EntityType", BindingFlags.GetProperty, null);
-                                    if (entityType == "AcDbBlockReference")
+                                    if (entity is AcadBlockReference)
                                     {
-
                                         //if (entity.Eff != "A3_Template_New") continue;
                                         AcadBlockReference blockRef = (AcadBlockReference)entity;
-                                        Console.WriteLine($"Found block reference: {blockRef.Name}");
+                                        //tsStatus.Text = $"Found block reference: {blockRef.Name}";
 
                                         if (blockRef.Name != "A3_Template_New") continue;
                                         foreach (AcadAttributeReference attrRef in blockRef.GetAttributes())
                                         {
-                                            Console.WriteLine($"Processing attribute: {attrRef.TagString}");
+                                            tsStatus.Text = $"Processing attribute: {attrRef.TagString}";
 
                                             switch (attrRef.TagString.ToUpper())
                                             {
@@ -439,9 +482,6 @@ namespace AutocadInitialization
                                                     break;
                                                 case "DATE":
                                                     attrRef.TextString = attributeData.Date;
-                                                    break;
-                                                case "DWG_TITLE":
-                                                    attrRef.TextString = attributeData.ProjectName;
                                                     break;
                                                 case "PROJECT_NAME":
                                                     attrRef.TextString = attributeData.ProjectName;
@@ -452,8 +492,26 @@ namespace AutocadInitialization
                                                 case "DWG_NO":
                                                     attrRef.TextString = attributeData.DrawingNo;
                                                     break;
-                                                case "SHEET_NO":
-                                                    attrRef.TextString = attributeData.SheetNo;
+                                                case "":
+                                                    attrRef.TextString = attributeData.DrawingNo;
+                                                    break;
+                                                case "CLIENTHEAD":
+                                                    attrRef.TextString = attributeData.ClientHead;
+                                                    break;
+                                                case "DEPARTMENT":
+                                                    attrRef.TextString = attributeData.Department;
+                                                    break;
+                                                case "DIVISION":
+                                                    attrRef.TextString = attributeData.Division;
+                                                    break;
+                                                case "CLIENTLOCATION":
+                                                    attrRef.TextString = attributeData.ClientLocation;
+                                                    break;
+                                                case "FIRMNAME":
+                                                    attrRef.TextString = attributeData.FirmName;
+                                                    break;
+                                                case "FIRMLOCATION":
+                                                    attrRef.TextString = attributeData.FirmLocation;
                                                     break;
                                             }
                                             attrRef.Update();
@@ -464,42 +522,35 @@ namespace AutocadInitialization
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Error processing {dwgFilePath}: {ex.Message}");
+                            Console.WriteLine($"Error processing {destinationFilePath}: {ex.Message}");
                         }
-                        //acadDoc.Save();
-                        //acadDoc.Close();
-
+                        acadDocs.Save();
+                        acadDocs.Close();
+                       
                     }
-                    catch (COMException comEx)
+                    catch (Exception ex)
                     {
-                        if ((uint)comEx.ErrorCode == 0x80010001) // RPC_E_CALL_REJECTED
+                        Console.WriteLine("Failed to initialize Autocad Application.");
+                    }
+                    finally
+                    {
+                        if (acadDocs != null)
                         {
-                            retryCount--;
-                            Console.WriteLine("Call was rejected by callee, retrying...");
-                            Thread.Sleep(delay);
-                        }
-                        else
-                        {
-                            throw;
+                            Marshal.ReleaseComObject(acadDocs);
+                            acadDocs = null; 
                         }
                     }
-                    break;
-                }
-                if (retryCount == 0)
-                {
-                    Console.WriteLine("Failed to process");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to initialize Autocad Application.");
+
             }
             finally
             {
+                tsStatus.Text = "Ready";
                 app.Finalized();
             }
-
-
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -594,7 +645,8 @@ namespace AutocadInitialization
                 selectedCount = lvDrawingsFrom.CheckedItems.Count;
             }
             chkSelectTo.Enabled = lvDrawingsTo.Items.Count != 0;
-            chkSelect.Checked = lvDrawingsFrom.Items.Count != 0;
+            chkSelectTo.Checked = lvDrawingsTo.Items.Count != 0;
+            //chkSelect.Checked = lvDrawingsFrom.Items.Count != 0;
             chkSelect.Enabled = lvDrawingsFrom.Items.Count != 0;
             chkSelect.Text = "Select All";
         }
@@ -615,6 +667,8 @@ namespace AutocadInitialization
                 selectedCount = lvDrawingsTo.CheckedItems.Count;
             }
             chkSelect.Enabled = lvDrawingsFrom.Items.Count != 0;
+            chkSelect.Checked = false;
+
             chkSelectTo.Enabled = lvDrawingsTo.Items.Count != 0;
             chkSelectTo.Checked = lvDrawingsTo.Items.Count != 0;
             chkSelectTo.Text = "Select All";
@@ -662,6 +716,61 @@ namespace AutocadInitialization
         private object InvokeMethod(object comObject, string methodName, BindingFlags bindingFlags, object[] args)
         {
             return comObject.GetType().InvokeMember(methodName, bindingFlags, null, comObject, args);
+        }
+        #region autocad methods
+
+        #endregion
+
+        private void btnBrowsePath_Click(object sender, EventArgs e)
+        {
+            if (txtFolderPath.Text == String.Empty)
+            {
+                FolderBrowserDialog fdb = new FolderBrowserDialog();
+                if (fdb.ShowDialog() == DialogResult.OK)
+                {
+                    Global.dwgFolderpathCopied = fdb.SelectedPath;
+                }
+            }
+            else
+            {
+                //open that folder in fileexplorer
+                try
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    {
+                        Arguments = Global.dwgFolderpathCopied,
+                        FileName = Global.dwgFolderpathCopied,
+                        UseShellExecute = true
+
+                    };
+                    Process.Start(startInfo);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            txtFolderPath.Text = Global.dwgFolderpathCopied;
+        }
+
+        private void lvDrawingsFrom_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            int count = 0;
+            foreach (ListViewItem lv in lvDrawingsFrom.Items)
+            {
+                if (lv.Checked) { count++; }
+            }
+            if (count == 0)
+            {
+                chkSelect.Text = "Select All";
+                chkSelect.Enabled = true;
+            }
+            else
+            {
+                //chkSelect.Text = "Select All";
+                chkSelect.Enabled = true;
+                //chkSelect.Checked = false;
+            }
         }
     }
 }
