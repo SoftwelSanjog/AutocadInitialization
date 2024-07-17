@@ -427,7 +427,8 @@ namespace AutocadInitialization
                 }
             }
 
-
+            int retryCount = 5;
+            int delay = 2000;
             AutoCADWrapper.Application app = new AutoCADWrapper.Application();
             try
             {
@@ -440,14 +441,13 @@ namespace AutocadInitialization
                     string sourceFilePath = Path.Combine(Global.dwgFolderpath, FileName + ".dwg");
                     string destinationFilePath = Path.Combine(Global.dwgFolderpathCopied, FileName + ".dwg");
                     File.Copy(sourceFilePath, destinationFilePath, true);
+                    //try
+                    //{
+
+                    //while (retryCount > 0)
+                    //{
                     try
                     {
-                        int retryCount = 5;
-                        int delay = 2000;
-                        //while (retryCount > 0)
-                        //{
-                        //try
-                        //{
                         //string dwgFilePath = @"C:\Users\shaky\Downloads\00 Drawing Test\08 VALVE CHAMBER.dwg";
                         //string dwgFilePath = @"C:\Users\Sanjog Shakya\Downloads\AutocadTest\08 VALVE CHAMBER.dwg";
                         acadDocs = app.AcadApplication.Documents.Open(destinationFilePath);
@@ -539,13 +539,26 @@ namespace AutocadInitialization
                             acadDocs.Save();
                             acadDocs.Close();
                         }
-
-
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("call was rejected by callee. Failed to initialize Autocad Application.");
                     }
+                    //catch (COMException comEx)
+                    //{
+                    //    if ((uint)comEx.ErrorCode == 0x80010001) // RPC_E_CALL_REJECTED
+                    //    {
+                    //        acadDocs.Save();
+                    //        acadDocs.Close();
+                    //        retryCount--;
+                    //        Console.WriteLine("Call was rejected by callee, retrying..." + retryCount);
+                    //        Thread.Sleep(delay);
+                    //    }
+                    //    else
+                    //    {
+                    //        throw;
+                    //    }
+                    //}
                     finally
                     {
                         if (acadDocs != null)
@@ -554,6 +567,7 @@ namespace AutocadInitialization
                             acadDocs = null;
                         }
                     }
+                    //}
                 }
             }
             catch (Exception ex)
