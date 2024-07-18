@@ -6,15 +6,15 @@ namespace AutocadInitialization
 {
     public class PrintByBlock
     {
-        public string PrinterName { get; set; }
-        public string PaperSize { get; set; }
-        public string PlotStyle { get; set; }
-        public string LayerName { get; set; }
-        public string BlockName { get; set; }
-        public bool CenterPlot { get; set; }
-        public int NoOfPages { get; set; }
-        public double PlotScale { get; set; }
+        //public string PrinterName { get; set; }
+        //public string PaperSize { get; set; }
+        //public string PlotStyle { get; set; }
+        //public double PlotScale { get; set; }
+        //public bool CenterPlot { get; set; }
 
+        public string LayerName { get; set; }
+        public string BlockName { get; set; }       
+        public int NoOfPages { get; set; } 
         private AcadDocument acadDocument;
         public PrintByBlock(AcadDocument acadDoc)
         {
