@@ -50,6 +50,7 @@ namespace AutoCADWrapper
             try
             {
                 acadApplication = (AcadApplication)Marshal.GetActiveObject(acadversion);
+                System.Threading.Thread.Sleep(1000);
                 nPid = GetProcessId();
             }
             catch (Exception ex)
@@ -68,7 +69,6 @@ namespace AutoCADWrapper
             }
             currentAcadProcessId = nPid - oPid;
         }
-
         public void Finalized()
         {
             try
@@ -143,6 +143,8 @@ namespace AutoCADWrapper
             color = acadApplication.GetInterfaceObject("AutoCAD.AcCmColor." + Global.selectedCadVersion);
             return color;
         }
+
+
 
     }
 }

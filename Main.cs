@@ -434,7 +434,6 @@ namespace AutocadInitialization
             {
                 app.Initialize(Global.selectedCadVersion.ToString(), true);
                 //Copy the selected drawing to the destination folder 
-
                 foreach (ListViewItem lvItem in lvDrawingsTo.CheckedItems)
                 {
                     string FileName = lvItem.Text;
@@ -448,8 +447,7 @@ namespace AutocadInitialization
                     //{
                     try
                     {
-                        //string dwgFilePath = @"C:\Users\shaky\Downloads\00 Drawing Test\08 VALVE CHAMBER.dwg";
-                        //string dwgFilePath = @"C:\Users\Sanjog Shakya\Downloads\AutocadTest\08 VALVE CHAMBER.dwg";
+                        //WaitForAutoCADReady(app.AcadApplication);
                         acadDocs = app.AcadApplication.Documents.Open(destinationFilePath);
                         tsStatus.Text = "Now Processing " + acadDocs.Name;
                         try
@@ -542,7 +540,7 @@ namespace AutocadInitialization
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("call was rejected by callee. Failed to initialize Autocad Application.");
+                        Console.WriteLine(ex.Message);//"call was rejected by callee. Failed to initialize Autocad Application.");
                     }
                     //catch (COMException comEx)
                     //{
@@ -581,6 +579,34 @@ namespace AutocadInitialization
             }
         }
 
+        private void WaitForAutoCADReady(AcadApplication acadApp)
+        {
+            const int maxWaitTimeSeconds = 60;
+            const int checkIntervalMilliseconds = 500;
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            while (stopwatch.Elapsed.TotalSeconds < maxWaitTimeSeconds)
+            {
+                try
+                {
+                    // Try to access a property or method that requires AutoCAD to be initialized
+                    var docs = acadApp.Documents;
+                    var activeDoc = acadApp.ActiveDocument;
+
+                    // If we get here without an exception, AutoCAD is ready
+                    Console.WriteLine("AutoCAD is ready.");
+                    return;
+                }
+                catch
+                {
+                    // If an exception occurs, AutoCAD is not ready yet
+                    Thread.Sleep(checkIntervalMilliseconds);
+                }
+            }
+
+            throw new TimeoutException("AutoCAD did not become ready within the specified time limit.");
+        }
         private void button8_Click(object sender, EventArgs e)
         {
             LoadDwgFiles(Global.dwgFolderpath);
